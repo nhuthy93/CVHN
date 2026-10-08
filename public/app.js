@@ -378,6 +378,7 @@ function setupModal() {
         if (orderIndex > -1) {
             orders[orderIndex].pipelineDate = newDate;
             orders[orderIndex].content = newContent;
+            orders[orderIndex].isDone = false;
             
             // Re-render
             updateView();
@@ -394,7 +395,7 @@ function setupModal() {
             fetch(`/api/orders/${id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pipelineDate: newDate, content: newContent })
+                body: JSON.stringify({ pipelineDate: newDate, content: newContent, isDone: false })
             });
         }
     });
