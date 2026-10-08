@@ -31,7 +31,7 @@ async function loadData() {
 
 let currentDate = new Date();
 let viewingDate = new Date(currentDate);
-let currentTab = 'unassigned';
+let currentTab = 'today';
 let selectedCalendarDate = null; // Used when clicking a date in calendar
 
 // Elements
@@ -214,21 +214,20 @@ function setupTabs() {
 }
 
 function updateBadges() {
-    let unassigned = 0, todayCount = 0, late = 0, done = 0;
+    let todayCount = 0, late = 0;
     const todayStr = getTodayStr();
 
     orders.forEach(o => {
         const status = getOrderStatus(o);
-        if (status === 'unassigned') unassigned++;
-        else if (status === 'today') todayCount++;
+        if (status === 'today') todayCount++;
         else if (status === 'late') late++;
-        else if (status === 'done') done++;
     });
 
-    document.getElementById('badge-unassigned').textContent = unassigned;
-    document.getElementById('badge-today').textContent = todayCount;
-    document.getElementById('badge-late').textContent = late;
-    document.getElementById('badge-done').textContent = done;
+    const badgeToday = document.getElementById('badge-today');
+    if (badgeToday) badgeToday.textContent = todayCount;
+    
+    const badgeLate = document.getElementById('badge-late');
+    if (badgeLate) badgeLate.textContent = late;
 
     let offSystemToday = 0;
     offSystemTasks.forEach(t => {
@@ -263,12 +262,10 @@ function updateView() {
         filteredOrders = orders.filter(o => o.pipelineDate === selectedCalendarDate);
     } else {
         const titles = {
-            'unassigned': 'Đơn hàng chưa set pipeline',
             'today': 'Hôm nay xử lý',
-            'late': 'Đơn hàng trễ pipeline',
-            'done': 'Đơn hàng đã hoàn thành'
+            'late': 'Đơn hàng trễ pipeline'
         };
-        elViewTitle.textContent = titles[currentTab];
+        elViewTitle.textContent = titles[currentTab] || 'Đơn hàng';
         
         filteredOrders = orders.filter(o => getOrderStatus(o) === currentTab);
         
@@ -302,23 +299,13 @@ function renderRowContent(tr, order) {
          actionsHtml = `<button class="btn-action" onclick="openModal('${order.id}')" title="Chỉnh sửa"><i class="fas fa-edit"></i></button>`;
     }
 
-    if (order.isDone) {
-        tr.innerHTML = `
-            <td><strong>${order.id}</strong><br>${statusHtml}</td>
-            <td>${order.name}</td>
-            <td style="color:#9ca3af; text-align:center;">-</td>
-            <td style="color:#9ca3af; text-align:center;">-</td>
-            <td>${actionsHtml}</td>
-        `;
-    } else {
-        tr.innerHTML = `
-            <td><strong>${order.id}</strong><br>${statusHtml}</td>
-            <td>${order.name}</td>
-            <td>${formatDateVN(order.pipelineDate) || '<span style="color:#9ca3af;font-style:italic">Chưa có</span>'}</td>
-            <td>${order.content || '<span style="color:#9ca3af;font-style:italic">Chưa có</span>'}</td>
-            <td>${actionsHtml}</td>
-        `;
-    }
+    tr.innerHTML = `
+        <td><strong>${order.id}</strong><br>${statusHtml}</td>
+        <td>${order.name}</td>
+        <td>${formatDateVN(order.pipelineDate) || '<span style="color:#9ca3af;font-style:italic">Chưa có</span>'}</td>
+        <td>${order.content || '<span style="color:#9ca3af;font-style:italic">Chưa có</span>'}</td>
+        <td>${actionsHtml}</td>
+    `;
 }
 
 function renderTable(data) {
@@ -397,9 +384,10 @@ function setupModal() {
             renderCalendar();
             closeModal();
             
-            // "cuộn để sang tab tiêu đề: Hôm nay xử lý" -> Let's switch if it was unassigned
-            if (currentTab === 'unassigned' && newDate === getTodayStr()) {
-                document.querySelector('.tab-btn[data-tab="today"]').click();
+            // "cuộn để sang tab tiêu đề: Hôm nay xử lý" if we set to today
+            if (newDate === getTodayStr()) {
+                const todayTab = document.querySelector('.tab-btn[data-tab="today"]');
+                if (todayTab) todayTab.click();
             }
 
             // API Call
