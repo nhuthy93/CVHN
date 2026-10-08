@@ -550,6 +550,13 @@ if (osEditForm) {
             renderOffSystemList();
             updateBadges(); // Refresh badges
             closeOsEditModal();
+
+            // API Call
+            fetch(`/api/off-system-tasks/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pipelineDate: newDate, content: newContent })
+            });
         }
     });
 }
