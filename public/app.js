@@ -149,12 +149,12 @@ const getOrderStatus = (order) => {
 
 // Initialize
 async function init() {
+    setupMobileSidebar();
     await loadData();
     setupCalendarSelectors();
     renderCalendar();
     setupTabs();
     setupModal();
-    setupMobileSidebar();
     updateView();
 }
 
