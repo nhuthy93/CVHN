@@ -28,13 +28,14 @@ body {
     background-color: var(--bg-color);
     color: var(--text-main);
     line-height: 1.5;
-    height: 100vh;
-    overflow: hidden;
+    /* Removed height: 100vh and overflow: hidden to allow native scrolling */
+    min-height: 100vh;
+    touch-action: auto;
 }
 
 .app-container {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
     padding: 20px;
     gap: 20px;
     max-width: 1600px;
@@ -419,8 +420,9 @@ td {
 }
 
 .modal-overlay.hidden {
-    display: none;
+    display: none !important;
     opacity: 0;
+    pointer-events: none;
 }
 
 .modal {
@@ -438,9 +440,10 @@ td {
 }
 
 .modal.hidden {
-    display: none;
+    display: none !important;
     transform: translate(-50%, -45%) scale(0.95);
     opacity: 0;
+    pointer-events: none;
 }
 
 .modal-header {
