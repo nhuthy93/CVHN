@@ -621,6 +621,12 @@ tbody tr {
     display: none;
 }
 
+@media (min-width: 769px) {
+    .btn-back-mobile {
+        display: none !important;
+    }
+}
+
 .header-title-wrapper {
     display: flex;
     align-items: center;
@@ -642,9 +648,6 @@ tbody tr {
     .hidden-desktop {
         display: block;
     }
-    .mobile-back-btn {
-        display: block;
-    }
 
     body {
         height: auto;
@@ -657,8 +660,20 @@ tbody tr {
         gap: 16px;
     }
 
-    /* Screen Transition Logic */
-    /* Screen 1: Sidebar only */
+    /* Screen Transition Logic based on Body class */
+    body:not(.mobile-detail-open) #main-content {
+        display: none !important;
+    }
+
+    body.mobile-detail-open #sidebar {
+        display: none !important;
+    }
+    
+    body.mobile-detail-open #main-content {
+        display: block !important;
+        width: 100% !important;
+    }
+
     .sidebar {
         position: static;
         width: 100%;
@@ -673,21 +688,11 @@ tbody tr {
     }
 
     .main-content {
-        display: none; /* Hidden on Screen 1 */
         width: 100%;
         min-height: 100vh;
         border-radius: 0;
         box-shadow: none;
         border: none;
-    }
-
-    /* Screen 2: Main Content only */
-    .app-container.view-detail .sidebar {
-        display: none;
-    }
-    
-    .app-container.view-detail .main-content {
-        display: flex;
     }
 
     .main-header {

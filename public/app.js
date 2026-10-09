@@ -159,20 +159,19 @@ async function init() {
 }
 
 function setupMobileSidebar() {
-    const mobileBackBtn = document.getElementById('mobile-back-btn');
-    const appContainer = document.querySelector('.app-container');
+    const mobileBackBtn = document.querySelector('.btn-back-mobile');
+    
+    window.isDetailOpen = false;
     
     window.goToDetailView = function() {
-        if (appContainer) {
-            appContainer.classList.add('view-detail');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        window.isDetailOpen = true;
+        document.body.classList.add('mobile-detail-open');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     window.goToHomeView = function() {
-        if (appContainer) {
-            appContainer.classList.remove('view-detail');
-        }
+        window.isDetailOpen = false;
+        document.body.classList.remove('mobile-detail-open');
     };
 
     if (mobileBackBtn) {
