@@ -627,7 +627,7 @@ tbody tr {
     gap: 15px;
 }
 
-.mobile-menu-btn {
+.mobile-back-btn {
     background: none;
     border: none;
     font-size: 1.5rem;
@@ -637,31 +637,12 @@ tbody tr {
     display: none;
 }
 
-.sidebar-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(17, 24, 39, 0.5);
-    backdrop-filter: blur(2px);
-    z-index: 199;
-    opacity: 1;
-    transition: opacity 0.3s ease;
-}
-
-.sidebar-overlay.hidden {
-    display: none !important;
-    opacity: 0;
-    pointer-events: none;
-}
-
 /* Mobile Responsiveness & Fix Touch Issues */
 @media (max-width: 768px) {
     .hidden-desktop {
         display: block;
     }
-    .mobile-menu-btn {
+    .mobile-back-btn {
         display: block;
     }
 
@@ -672,37 +653,41 @@ tbody tr {
 
     .app-container {
         flex-direction: column;
-        padding: 0; /* Full width on mobile */
-        gap: 0;
+        padding: 12px;
+        gap: 16px;
     }
 
-    /* Sidebar Drawer */
+    /* Screen Transition Logic */
+    /* Screen 1: Sidebar only */
     .sidebar {
-        position: fixed;
-        top: 0;
-        left: -320px; /* Hidden by default */
-        width: 300px;
-        height: 100vh;
-        background: var(--card-bg);
-        z-index: 200;
-        padding: 20px;
-        box-shadow: var(--shadow-lg);
-        transition: transform 0.3s ease;
-        overflow-y: auto;
-        margin: 0;
-        flex-shrink: 0;
-    }
-    
-    .sidebar.open {
-        transform: translateX(320px);
+        position: static;
+        width: 100%;
+        height: auto;
+        background: transparent;
+        z-index: 1;
+        padding: 0;
+        box-shadow: none;
+        transform: none;
+        overflow-y: visible;
+        flex-shrink: 1;
     }
 
     .main-content {
+        display: none; /* Hidden on Screen 1 */
         width: 100%;
         min-height: 100vh;
         border-radius: 0;
         box-shadow: none;
         border: none;
+    }
+
+    /* Screen 2: Main Content only */
+    .app-container.view-detail .sidebar {
+        display: none;
+    }
+    
+    .app-container.view-detail .main-content {
+        display: flex;
     }
 
     .main-header {

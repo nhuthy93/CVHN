@@ -159,24 +159,25 @@ async function init() {
 }
 
 function setupMobileSidebar() {
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const mobileBackBtn = document.getElementById('mobile-back-btn');
+    const appContainer = document.querySelector('.app-container');
     
-    window.toggleMobileSidebar = function() {
-        if (!sidebar || !sidebarOverlay) return;
-        const isOpen = sidebar.classList.contains('open');
-        if (isOpen) {
-            sidebar.classList.remove('open');
-            sidebarOverlay.classList.add('hidden');
-        } else {
-            sidebar.classList.add('open');
-            sidebarOverlay.classList.remove('hidden');
+    window.goToDetailView = function() {
+        if (appContainer) {
+            appContainer.classList.add('view-detail');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
-    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', window.toggleMobileSidebar);
-    if (sidebarOverlay) sidebarOverlay.addEventListener('click', window.toggleMobileSidebar);
+    window.goToHomeView = function() {
+        if (appContainer) {
+            appContainer.classList.remove('view-detail');
+        }
+    };
+
+    if (mobileBackBtn) {
+        mobileBackBtn.addEventListener('click', window.goToHomeView);
+    }
 }
 
 function setupCalendarSelectors() {
@@ -281,8 +282,8 @@ function renderCalendar() {
             renderCalendar(); // Re-render to update active styling
             updateView();
 
-            if (window.toggleMobileSidebar && document.getElementById('sidebar')?.classList.contains('open')) {
-                window.toggleMobileSidebar();
+            if (window.goToDetailView) {
+                window.goToDetailView();
             }
         });
         
@@ -300,8 +301,8 @@ function setupTabs() {
             renderCalendar(); // clear active calendar date
             updateView();
 
-            if (window.toggleMobileSidebar && document.getElementById('sidebar')?.classList.contains('open')) {
-                window.toggleMobileSidebar();
+            if (window.goToDetailView) {
+                window.goToDetailView();
             }
         });
     });
@@ -549,8 +550,8 @@ if (osSubTabs) {
                 renderOffSystemList();
             }
             
-            if (window.toggleMobileSidebar && document.getElementById('sidebar')?.classList.contains('open')) {
-                window.toggleMobileSidebar();
+            if (window.goToDetailView) {
+                window.goToDetailView();
             }
         });
     });

@@ -10,9 +10,6 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- Mobile Sidebar Overlay -->
-        <div id="sidebar-overlay" class="sidebar-overlay hidden"></div>
-        
         <!-- Sidebar: Left Column -->
         <aside class="sidebar" id="sidebar">
             <div class="calendar-card">
@@ -58,12 +55,12 @@
         </aside>
 
         <!-- Main Content: Right Column -->
-        <main class="main-content">
+        <main class="main-content" id="main-content">
             <!-- Header for current view -->
             <header class="main-header">
                 <div class="header-title-wrapper">
-                    <button id="mobile-menu-btn" class="mobile-menu-btn hidden-desktop">
-                        <i class="fas fa-bars"></i>
+                    <button id="mobile-back-btn" class="mobile-back-btn hidden-desktop">
+                        <i class="fas fa-arrow-left"></i>
                     </button>
                     <h1 id="view-title">Đơn hàng chưa set pipeline</h1>
                 </div>
