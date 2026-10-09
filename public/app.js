@@ -1,3 +1,67 @@
+// --- START MOBILE DEBUG SCRIPT ---
+(function() {
+    function sendLog(data) {
+        fetch('/api/debug', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).catch(e => console.error("Debug send failed", e));
+        
+        // Also show an alert overlay on screen for the user
+        let toast = document.getElementById('debug-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'debug-toast';
+            toast.style.cssText = 'position: fixed; top: 10px; left: 10px; right: 10px; background: rgba(0,0,0,0.9); color: #0f0; padding: 15px; z-index: 2147483647; font-size: 11px; pointer-events: none; border-radius: 8px; font-family: monospace; word-wrap: break-word; max-height: 50vh; overflow-y: auto;';
+            document.body.appendChild(toast);
+        }
+        let msg = `[${data.event}] Target: <${data.targetTag}> .${data.targetClass} | Top: <${data.elementFromPoint ? data.elementFromPoint.tag : 'null'}> .${data.elementFromPoint ? data.elementFromPoint.className : 'none'} (z-index: ${data.elementFromPoint ? data.elementFromPoint.zIndex : ''})`;
+        toast.innerHTML = msg + '<br>' + toast.innerHTML;
+    }
+
+    const eventsToMonitor = ['touchstart', 'touchend', 'pointerdown', 'click'];
+    eventsToMonitor.forEach(eventName => {
+        document.addEventListener(eventName, (e) => {
+            let x = 0, y = 0;
+            if (e.touches && e.touches.length > 0) {
+                x = e.touches[0].clientX;
+                y = e.touches[0].clientY;
+            } else if (e.clientX !== undefined) {
+                x = e.clientX;
+                y = e.clientY;
+            } else if (e.changedTouches && e.changedTouches.length > 0) {
+                x = e.changedTouches[0].clientX;
+                y = e.changedTouches[0].clientY;
+            }
+
+            let topEl = null;
+            if (x > 0 && y > 0) {
+                topEl = document.elementFromPoint(x, y);
+            }
+            
+            const logData = {
+                event: eventName,
+                phase: e.eventPhase === 1 ? 'CAPTURE' : (e.eventPhase === 2 ? 'AT_TARGET' : 'BUBBLING'),
+                targetTag: e.target ? e.target.tagName : 'NULL',
+                targetClass: e.target ? e.target.className : 'NULL',
+                targetId: e.target ? e.target.id : 'NULL',
+                x: x,
+                y: y,
+                elementFromPoint: topEl ? {
+                    tag: topEl.tagName,
+                    className: topEl.className,
+                    id: topEl.id,
+                    zIndex: window.getComputedStyle(topEl).zIndex,
+                    pointerEvents: window.getComputedStyle(topEl).pointerEvents
+                } : null
+            };
+            
+            sendLog(logData);
+        }, true); // Use capture phase
+    });
+})();
+// --- END MOBILE DEBUG SCRIPT ---
+
 // State
 let orders = [];
 let offSystemTasks = [];
