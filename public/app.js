@@ -154,7 +154,29 @@ async function init() {
     renderCalendar();
     setupTabs();
     setupModal();
+    setupMobileSidebar();
     updateView();
+}
+
+function setupMobileSidebar() {
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    
+    window.toggleMobileSidebar = function() {
+        if (!sidebar || !sidebarOverlay) return;
+        const isOpen = sidebar.classList.contains('open');
+        if (isOpen) {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.add('hidden');
+        } else {
+            sidebar.classList.add('open');
+            sidebarOverlay.classList.remove('hidden');
+        }
+    };
+
+    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', window.toggleMobileSidebar);
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', window.toggleMobileSidebar);
 }
 
 function setupCalendarSelectors() {
@@ -258,6 +280,10 @@ function renderCalendar() {
             
             renderCalendar(); // Re-render to update active styling
             updateView();
+
+            if (window.toggleMobileSidebar && document.getElementById('sidebar')?.classList.contains('open')) {
+                window.toggleMobileSidebar();
+            }
         });
         
         elCalendarDays.appendChild(div);
@@ -273,6 +299,10 @@ function setupTabs() {
             selectedCalendarDate = null;
             renderCalendar(); // clear active calendar date
             updateView();
+
+            if (window.toggleMobileSidebar && document.getElementById('sidebar')?.classList.contains('open')) {
+                window.toggleMobileSidebar();
+            }
         });
     });
 }
@@ -517,6 +547,10 @@ if (osSubTabs) {
                 subViewAdd.classList.add('hidden');
                 subViewList.classList.remove('hidden');
                 renderOffSystemList();
+            }
+            
+            if (window.toggleMobileSidebar && document.getElementById('sidebar')?.classList.contains('open')) {
+                window.toggleMobileSidebar();
             }
         });
     });

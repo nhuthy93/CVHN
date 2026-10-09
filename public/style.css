@@ -617,42 +617,110 @@ tbody tr {
     display: none !important;
 }
 
+.hidden-desktop {
+    display: none;
+}
+
+.header-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.mobile-menu-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 5px;
+    display: none;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(17, 24, 39, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 199;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
 /* Mobile Responsiveness & Fix Touch Issues */
 @media (max-width: 768px) {
+    .hidden-desktop {
+        display: block;
+    }
+    .mobile-menu-btn {
+        display: block;
+    }
+
     body {
         height: auto;
-        overflow: visible; /* Fix touch target shifting / blocking on iOS */
+        overflow: visible;
     }
 
     .app-container {
         flex-direction: column;
-        height: auto;
-        padding: 12px;
-        gap: 16px;
+        padding: 0; /* Full width on mobile */
+        gap: 0;
     }
 
+    /* Sidebar Drawer */
     .sidebar {
-        width: 100%;
-        flex-shrink: 1;
+        position: fixed;
+        top: 0;
+        left: -320px; /* Hidden by default */
+        width: 300px;
+        height: 100vh;
+        background: var(--card-bg);
+        z-index: 200;
+        padding: 20px;
+        box-shadow: var(--shadow-lg);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+        margin: 0;
+        flex-shrink: 0;
+    }
+    
+    .sidebar.open {
+        transform: translateX(320px);
     }
 
     .main-content {
-        overflow: visible;
+        width: 100%;
+        min-height: 100vh;
+        border-radius: 0;
         box-shadow: none;
         border: none;
-        background: transparent;
     }
 
     .main-header {
-        padding: 16px 0;
+        padding: 16px;
         flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
+        align-items: stretch;
+        gap: 16px;
+        background: var(--card-bg);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        box-shadow: var(--shadow-sm);
     }
 
     .search-box input {
         width: 100%;
-        min-width: 300px;
+        min-width: unset;
+        min-height: 44px; /* Touch target */
     }
 
     .search-box input:focus {
@@ -660,26 +728,58 @@ tbody tr {
     }
 
     .content-area {
-        padding: 16px 0;
-        overflow-y: visible;
+        padding: 16px;
     }
 
     .table-container {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         background: var(--card-bg);
+        border: none;
+        border-radius: 0;
+        margin: 0 -16px; /* Edge to edge */
     }
     
     table {
-        min-width: 600px;
+        min-width: 650px;
     }
     
-    .tab-btn {
-        padding: 16px; /* Increase touch target */
+    .btn-action, .tab-btn, .sub-tab-btn, .close-modal, .close-os-modal, .calendar-day {
+        min-height: 44px; /* Touch targets */
+        min-width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
+    .tab-btn, .sub-tab-btn {
+        justify-content: flex-start;
+        padding: 10px 16px;
+    }
+
+    /* Modals */
     .modal {
         width: 95%;
         max-width: 400px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 0;
+    }
+    
+    .form-group input, .btn-submit, .btn-cancel {
+        min-height: 44px;
+    }
+    
+    .custom-form {
+        max-width: 100%;
+        padding: 16px;
+        border: none;
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .calendar-card {
+        padding: 15px;
+        border: none;
+        box-shadow: none;
     }
 }
